@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="offline-banner" v-if="online" style="background-color: black; color: #fff; width: 100%; margin-bottom: 1%; display:flex; justify-content: center;">Du bist Offline</div>
+    <div id="offline-banner" v-if="!online" style="background-color: black; color: #fff; width: 100%; margin-bottom: 1%; display:flex; justify-content: center;">Du bist Offline. Du kannst alle Daten sehen, aber nicht Bearbeiten.</div>
     <header class="mb-3 border-bottom bg-white bg-opacity-25">
       <div class="container">
         <div class="d-flex flex-row align-items-center nav">
