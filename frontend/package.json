@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": " npm run build-sw && vite & vue-tsc --noEmit --watch",
+    "dev": "npm run build-sw && vite & vue-tsc --noEmit --watch",
     "build": "vue-tsc --noEmit && vite build",
     "build-sw": "workbox injectManifest sw-config.ts",
     "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore --fix src",

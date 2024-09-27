@@ -1,9 +1,6 @@
-const isProd = process.env.NODE_ENV === 'production'
-
 module.exports = {
-  globDirectory: isProd ? 'dist/' : 'src/',
-  globPatterns: ['**/*.{js,css,html,png,jpg}'],
+  globDirectory: 'src/',
+  globPatterns: ['**/*.{vue,ts,css}'],
   swSrc: 'sw.ts',
-  swDest: isProd ? 'dist/sw.js' : 'src/sw.js',
-  ignoreURLParametersMatching: [/^utm_/, /^fbclid$/]
+  swDest: 'src/sw.ts'
 }
