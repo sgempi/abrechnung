@@ -8,7 +8,7 @@ precacheAndRoute(self.__WB_MANIFEST)
 self.addEventListener('install', (e: Event) => {
   // e.waitUntil(self.skipWaiting())
   console.log('triggerd activation')
-  self.skipWaiting()
+  // self.skipWaiting()
 })
 
 self.addEventListener('activate', (e: Event) => {
