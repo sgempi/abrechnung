@@ -4,5 +4,5 @@ module.exports = {
   globDirectory: isProd ? 'dist/' : 'src/',
   globPatterns: ['**/*.{js,css,html,png,jpg,vue}'],
   swSrc: 'serviceworker.ts',
-  swDest: './src/sw.ts'
+  swDest: './sw.ts'
 }
