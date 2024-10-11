@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div id="offline-banner" v-if="!online" style="background-color: black; color: #fff; width: 100%; margin-bottom: 1%; display:flex; justify-content: center;">Du bist Offline. Du kannst alle Daten sehen, aber nicht Bearbeiten.</div>
+    <div
+      id="offline-banner"
+      v-if="!onlineState"
+      style="background-color: black; color: #fff; width: 100%; margin-bottom: 1%; display: flex; justify-content: center">
+      Du bist Offline. Du kannst alle Daten sehen, aber nicht Bearbeiten.
+    </div>
     <header class="mb-3 border-bottom bg-white bg-opacity-25">
       <div class="container">
         <div class="d-flex flex-row align-items-center nav">
@@ -139,18 +144,18 @@ import { defineComponent } from 'vue'
 import { log } from '../../common/logger.js'
 import { getFlagEmoji } from '../../common/scripts.js'
 import {
+  accesses,
   CountrySimple,
   Currency,
   GETResponse,
   HealthInsurance,
   Locale,
+  locales,
   OrganisationSimple,
   ProjectSimple,
   SETResponse,
   Settings,
-  User,
-  accesses,
-  locales
+  User
 } from '../../common/types.js'
 
 export interface Alert {
@@ -180,7 +185,8 @@ export default defineComponent({
       bp: { sm: 576, md: 768, lg: 992, xl: 1200, xxl: 1400 },
       locales,
       accesses,
-      online: true
+      onlineState: navigator.onLine
+      // true as true | false
     }
   },
   components: {},
