@@ -1,39 +1,48 @@
 import { precacheAndRoute } from 'workbox-precaching'
 
 declare let self: ServiceWorkerGlobalScope
-export {}
+export { }
 
 const cacheName = 'abrechnung-cache'
 
 precacheAndRoute(self.__WB_MANIFEST)
 
-self.addEventListener('install', (e: ExtendableEvent) => {
-  e.waitUntil(
-    caches.open(cacheName).then((cache) => {
-      console.log('caching')
-      return cache.addAll(['/user', 'main.ts'])
-    })
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(cacheName)
+      // Setting {cache: 'reload'} in the new request will ensure that the response
+      // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
+      // await cache.put(new Request('/backend/settings'), await fetch('/backend/settings'))
+
+      console.log('installevent triggerd')
+    })()
   )
+})
+self.addEventListener('activate', (event) => {
+  console.log('Claiming control')
+  return self.clients.claim()
 })
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
-      if (!response) {
-        return fetch(event.request).then((networkResponse) => {
-          return caches.open('my-cache').then((cache) => {
-            cache.put(event.request, networkResponse.clone())
-            return networkResponse
-          })
-        })
-      } else {
+      if (response) {
         return response
       }
+      return fetch(event.request).then((networkResponse) => {
+        return caches.open(cacheName).then((cache) => {
+          cache.put(event.request, networkResponse.clone())
+          return networkResponse
+        })
+      })
     })
   )
 })
-// self.addEventListener('activate', (e: Event) => {
-//   // e.waitUntil(self.clients.claim())
+
+// self.addEventListener('activate', (e: any) => {
+//   e.waitUntil(self.clients.claim())
 //   console.log('triggerd installation')
 // })
 
