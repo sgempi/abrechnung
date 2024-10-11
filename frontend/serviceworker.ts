@@ -1,27 +1,26 @@
 import { precacheAndRoute } from 'workbox-precaching'
 
 declare let self: ServiceWorkerGlobalScope
-export { }
+export {}
 
 const cacheName = 'abrechnung-cache'
 
 precacheAndRoute(self.__WB_MANIFEST)
 
-
 self.addEventListener('install', (event) => {
   event.waitUntil(
     (async () => {
-      const cache = await caches.open(cacheName)
+      const cache = await caches.open(cacheName).then((cache) => cache.add('user'))
       // Setting {cache: 'reload'} in the new request will ensure that the response
       // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
       // await cache.put(new Request('/backend/settings'), await fetch('/backend/settings'))
-
       console.log('installevent triggerd')
     })()
   )
 })
 self.addEventListener('activate', (event) => {
   console.log('Claiming control')
+
   return self.clients.claim()
 })
 
@@ -33,7 +32,7 @@ self.addEventListener('fetch', (event) => {
       }
       return fetch(event.request).then((networkResponse) => {
         return caches.open(cacheName).then((cache) => {
-          cache.put(event.request, networkResponse.clone())
+          // cache.put(event.request, networkResponse.clone())
           return networkResponse
         })
       })
