@@ -1,11 +1,6 @@
 <template>
   <div>
-    <div
-      id="offline-banner"
-      v-if="!isOffline"
-      style="background-color: black; color: #fff; width: 100%; margin-bottom: 1%; display: flex; justify-content: center">
-      Du bist Offline. Du kannst alle Daten sehen, aber nicht Bearbeiten.
-    </div>
+    <OfflineBanner v-if="isOffline"></OfflineBanner>
     <header class="mb-3 border-bottom bg-white bg-opacity-25">
       <div class="container">
         <div class="d-flex flex-row align-items-center nav">
@@ -157,6 +152,7 @@ import {
   Settings,
   User
 } from '../../common/types.js'
+import OfflineBanner from './components/elements/OfflineBanner.vue'
 
 export interface Alert {
   type: 'danger' | 'success'
@@ -189,7 +185,7 @@ export default defineComponent({
       // true as true | false
     }
   },
-  components: {},
+  components: { OfflineBanner },
   methods: {
     async load() {
       if (this.loadState === 'UNLOADED') {
