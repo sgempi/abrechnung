@@ -181,8 +181,7 @@ export default defineComponent({
       bp: { sm: 576, md: 768, lg: 992, xl: 1200, xxl: 1400 },
       locales,
       accesses,
-      isOffline: false
-      // true as true | false
+      isOffline: false as boolean
     }
   },
   components: { OfflineBanner },
@@ -211,7 +210,6 @@ export default defineComponent({
           this.projects = result[6].status === 'fulfilled' ? (result[6].value.ok ? result[6].value.ok.data : []) : []
           this.specialLumpSums = result[7].status === 'fulfilled' ? (result[7].value.ok ? result[7].value.ok.data : {}) : {}
           this.users = result[8].status === 'fulfilled' ? (result[8].value.ok ? result[8].value.ok.data : []) : []
-
           log(this.$t('labels.user') + ':')
           log(this.user)
           if (this.user._id) {
@@ -386,9 +384,16 @@ export default defineComponent({
         list.pop()
       }
     },
+    updateConnectionStatus() {
+      console.log(!window.navigator.onLine)
+      this.isOffline = !window.navigator.onLine
+    },
     getFlagEmoji
   },
-  mounted() {}
+  mounted() {
+    window.addEventListener('online', this.updateConnectionStatus)
+    window.addEventListener('offline', this.updateConnectionStatus)
+  }
 })
 </script>
 
