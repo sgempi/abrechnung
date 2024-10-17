@@ -140,6 +140,9 @@ const router = createRouter({
 
 async function auth() {
   var auth = false
+  if (!navigator.onLine) {
+    return true
+  }
   try {
     const res = await axios.get(import.meta.env.VITE_BACKEND_URL + '/auth/authenticated', {
       withCredentials: true
