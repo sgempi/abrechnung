@@ -385,7 +385,6 @@ export default defineComponent({
       }
     },
     updateConnectionStatus() {
-      console.log(!window.navigator.onLine)
       this.isOffline = !window.navigator.onLine
     },
     getFlagEmoji
