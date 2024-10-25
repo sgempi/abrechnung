@@ -218,6 +218,7 @@ export default defineComponent({
             this.$formatter.setLocale(this.user.settings.language)
             this.auth = true
           }
+          this.isOffline = !navigator.onLine // braucht man irgendwie für Safari & Firefox? 
           this.loadState = 'LOADED'
         })
         await this.loadingPromise
