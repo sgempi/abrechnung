@@ -52,6 +52,46 @@ registerRoute(
   })
 )
 
+self.addEventListener('push', (event) => {
+  console.log(event.data?.json(), Notification.permission)
+  let notification = event.data?.json()
+  event.waitUntil(
+    self.registration.showNotification(notification.title, {
+      body: notification.body
+    })
+  )
+})
+
+async function fetchAndCacheUrls(reportTypes: string[]) {
+  let detailUrls: string[] = []
+  for (let reportType of reportTypes) {
+    let url = '/backend/' + reportType + '?limit=12'
+    detailUrls.push(url)
+    detailUrls.push('/backend/' + reportType + '/examiner')
+    try {
+      const response = await fetch(url) // Daten von der URL abrufen
+      if (response.ok) {
+        const res = await response.json() // Antwortdaten verarbeiten
+        for (let i = 0; i < res.data.length; i++) {
+          detailUrls.push(
+            '/backend/' +
+              reportType +
+              '?_id=' +
+              res.data[i]._id +
+              (reportType == 'travel'
+                ? '&additionalFields=stages&additionalFields=expenses&additionalFields=days'
+                : '&additionalFields=expenses')
+          )
+        }
+      }
+    } catch (error) {
+      console.error(`Fehler beim Abrufen der URL ${url}:`, error)
+    }
+  }
+  return detailUrls
+}
+
+// ab hier aktuell irrelevant ------------------------------------------------------------------------------------------------------------------------
 // self.addEventListener('fetch', (event) => {
 //   event.respondWith(
 //     //das soll network first sein.
@@ -104,35 +144,6 @@ registerRoute(
 //   //   //   })
 //   // )
 // })
-
-async function fetchAndCacheUrls(reportTypes: string[]) {
-  let detailUrls: string[] = []
-  for (let reportType of reportTypes) {
-    let url = '/backend/' + reportType + '?limit=12'
-    detailUrls.push(url)
-    detailUrls.push('/backend/' + reportType + '/examiner')
-    try {
-      const response = await fetch(url) // Daten von der URL abrufen
-      if (response.ok) {
-        const res = await response.json() // Antwortdaten verarbeiten
-        for (let i = 0; i < res.data.length; i++) {
-          detailUrls.push(
-            '/backend/' +
-              reportType +
-              '?_id=' +
-              res.data[i]._id +
-              (reportType == 'travel'
-                ? '&additionalFields=stages&additionalFields=expenses&additionalFields=days'
-                : '&additionalFields=expenses')
-          )
-        }
-      }
-    } catch (error) {
-      console.error(`Fehler beim Abrufen der URL ${url}:`, error)
-    }
-  }
-  return detailUrls
-}
 
 // // Route für travel, um die IDs bei der ersten Anfrage zu cachen
 // registerRoute(
