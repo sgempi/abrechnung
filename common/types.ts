@@ -175,6 +175,10 @@ export interface User extends UserSimple {
     insurance?: HealthInsurance | null
     organisation?: OrganisationSimple | null
   }
+  push: {
+    subscriptions: Subscription[]
+  }
+  subscriptions: Subscription[]
   vehicleRegistration?: DocumentFile[] | null
   token?: Token | null
 }
