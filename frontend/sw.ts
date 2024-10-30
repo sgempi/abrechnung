@@ -1,21 +1,23 @@
 /// <reference lib="webworker" />
 import { createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching'
 import { NavigationRoute, registerRoute, setDefaultHandler } from 'workbox-routing'
-import { NetworkFirst, NetworkOnly } from 'workbox-strategies'
+import { NetworkFirst, NetworkOnly, StaleWhileRevalidate } from 'workbox-strategies'
 declare var self: ServiceWorkerGlobalScope
 export default {}
 precacheAndRoute(self.__WB_MANIFEST)
-let cacheName = 'abrechnung'
+let cacheName = 'abrechnung' // hier könnte man eine versionierung ergänzen - eventuell nach app version?
+// dann müsste man alle alten Caches aber auch aktiv löschen
 const reportTypeToFetch = ['healthCareCost', 'expenseReport', 'travel']
 
 self.addEventListener('install', (event) => {
   console.log('installevent triggerd')
-  self.skipWaiting()
+  self.skipWaiting() // direkt activate triggern
 })
 
 self.addEventListener('activate', (event) => {
-  console.log('activate event triggerd')
   event.waitUntil(
+    // ausführen dieser Funktion ist quatschig, wenn der Service Worker nicht aktiviert wird, wenn der Nutzer schon eingeloggt ist
+    // wird installiert, wenn die Seite geladen wird - da ist der Nutzer selten schon eingeloggt.
     (async () => {
       let urlsToCache = await fetchAndCacheUrls(reportTypeToFetch)
       const cache = await caches.open(cacheName).then((cache) => {
@@ -47,7 +49,7 @@ registerRoute(
 )
 registerRoute(
   ({ request }) => request.url.includes('/manifest.json'),
-  new NetworkFirst({
+  new StaleWhileRevalidate({
     cacheName: 'manifest-cache'
   })
 )
